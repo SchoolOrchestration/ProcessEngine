@@ -20,7 +20,7 @@ class Process(models.Model):
     def __str__(self):
         return self.name
 
-    name = models.CharField(max_length=100, db_index=True, choices=PROCESS_NAMES)
+    name = models.CharField(max_length=100, db_index=True)
 
     created_date = models.DateTimeField(auto_now_add=True, db_index=True)
     modified_date = models.DateTimeField(auto_now=True, db_index=True)

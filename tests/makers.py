@@ -1,4 +1,4 @@
-from ..models import Process
+from processengine.models import Process
 
 def create_fake_process(name=None, context={}):
 

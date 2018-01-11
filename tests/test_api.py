@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.urls import reverse
 from django.test import TestCase, override_settings
-from ..models import Process
+from processengine.models import Process
 from .datas import PROCESS_MAP
 from .makers import create_fake_process
 
