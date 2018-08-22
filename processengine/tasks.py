@@ -1,6 +1,6 @@
-from celery import shared_task
+from django_rq import job
+from django.conf import settings
 
-
-@shared_task
+@job(settings.RQ_DEFAULT_QUEUE)
 def ping(*args, **kwargs):
     return 'pong'
