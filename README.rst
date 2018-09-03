@@ -16,7 +16,7 @@ Quick start
         'processengine',
     ]
 
-2. Include the polls URLconf in your project urls.py like this::
+2. Include the router URLconf in your project urls.py like this::
 
     from processengine.api import router as process_router
     ...
@@ -25,7 +25,6 @@ Quick start
         url(r'^processengine/', include(process_router.urls)),
         ...
     ]
-
 
 3. Add the PROCESS_MAP settings with your processes and the tasks to run like
 so::
@@ -37,6 +36,11 @@ so::
         ...
     }
 
+3. (Optional) Add settings for Slack Notifications. Note that if you add a SLACK_WEBHOOK setting we assume you will also have the other settings present.::
+  SLACK_WEBHOOK = "https://hooks.slack.com/services/T051CQH14/VWVRAAFA5/lPz2y84gM0JUoVllBow0Glcx"
+  SLACK_PROCESS_CHANNEL = "#Processes"
+  SLACK_PROCESS_USERNAME = "Someuser"
+  SLACK_PROCESS_EMOJI = ":ghost:"
 
 4. Run `python manage.py migrate` to create the processengine models.
 

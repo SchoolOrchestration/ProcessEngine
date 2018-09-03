@@ -10,7 +10,11 @@ from unittest.mock import patch
 from django_rq import get_queue
 from processengine.helpers import retry_handler
 
-@override_settings(SLACK_WEBHOOK="http://example.com", DEBUG=False)
+@override_settings(SLACK_WEBHOOK="http://example.com",
+                   SLACK_PROCESS_CHANNEL = "#Processes",
+                   SLACK_PROCESS_USERNAME = "Someuser",
+                   SLACK_PROCESS_EMOJI = ":ghost:",
+                   DEBUG=False)
 @override_settings(CELERY_ALWAYS_EAGER = True)
 class RunTaskTestCase(TestCase):
 

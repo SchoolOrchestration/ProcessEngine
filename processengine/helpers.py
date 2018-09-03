@@ -6,7 +6,12 @@ import time
 from django_rq import get_queue, get_worker
 
 
-def slack_notification(message, title=None, task_id=None):
+def slack_notification(message,
+                       channel,
+                       username,
+                       emoji=":ghost:",
+                       title=None,
+                       task_id=None):
     """
     Helper function to send notifications to slack
     """
@@ -18,10 +23,10 @@ def slack_notification(message, title=None, task_id=None):
     message += "\n" + str_time
     data = {
         "text": message,
-        "channel": "#processes",
+        "channel": channel,
         "link_names": 1,
-        "username": "Vuma-Bot",
-        "icon_emoji": ":ghost:",
+        "username": username,
+        "icon_emoji": emoji,
     }
     requests.post(settings.SLACK_WEBHOOK, data=json.dumps(data))
 
