@@ -7,8 +7,6 @@ from processengine.models import Process
 
 from processengine.helpers import slack_notification
 
-SERVICE_NAME = "Order Service"
-
 SPACER_LINE = """
 ===============================================================================
 """
@@ -40,7 +38,7 @@ class Command(BaseCommand):
                 except Exception as e:
                     if not settings.DEBUG and settings.SLACK_WEBHOOK:
                         param_string = str(param_string)
-                        title = SERVICE_NAME + ": Process Creation Failed"
+                        title = settings.SERVICE_NAME + ": Process Creation Failed"
                         message = (
                             "Arguments for task {} don't appear to be valid"
                             " JSON.\nArguments were {}")
@@ -59,7 +57,7 @@ class Command(BaseCommand):
                     return
                 if not type(params) == dict:
                     if not settings.DEBUG and settings.SLACK_WEBHOOK:
-                        title = SERVICE_NAME + ": Process Creation Failed"
+                        title = settings.SERVICE_NAME + ": Process Creation Failed"
                         message = ("Arguments for task {} are not a valid dict"
                                    ".\nArguments were {}")
                         message = message.format(task_name, param_string)
@@ -82,7 +80,7 @@ class Command(BaseCommand):
                 print(message)
                 print(SPACER_LINE)
             elif settings.SLACK_WEBHOOK:
-                title = SERVICE_NAME + ": Process Creation Succeeded"
+                title = settings.SERVICE_NAME + ": Process Creation Succeeded"
                 slack_notification(message=message,
                                    channel=settings.SLACK_PROCESS_CHANNEL,
                                    username=settings.SLACK_PROCESS_USERNAME,
@@ -90,7 +88,7 @@ class Command(BaseCommand):
                                    title=title)
         else:
             if not settings.DEBUG and settings.SLACK_WEBHOOK:
-                title = SERVICE_NAME + ": Process Creation Failed"
+                title = settings.SERVICE_NAME + ": Process Creation Failed"
                 message = (
                     "We attempted to create a process running task *'{}'*, "
                     "but this task is unknown.")

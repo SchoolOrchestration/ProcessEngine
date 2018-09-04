@@ -14,6 +14,7 @@ from processengine.helpers import retry_handler
                    SLACK_PROCESS_CHANNEL = "#Processes",
                    SLACK_PROCESS_USERNAME = "Someuser",
                    SLACK_PROCESS_EMOJI = ":ghost:",
+                   SERVICE_NAME = "Someservice",
                    DEBUG=False)
 @override_settings(CELERY_ALWAYS_EAGER = True)
 class RunTaskTestCase(TestCase):

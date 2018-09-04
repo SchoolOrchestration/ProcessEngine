@@ -41,6 +41,7 @@ so::
   SLACK_PROCESS_CHANNEL = "#Processes"
   SLACK_PROCESS_USERNAME = "Someuser"
   SLACK_PROCESS_EMOJI = ":ghost:"
+  SERVICE_NAME = "Someservice"
 
 4. Run `python manage.py migrate` to create the processengine models.
 
