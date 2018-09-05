@@ -24,9 +24,14 @@ class Command(BaseCommand):
         Run the specified task through the process engine.
         """
         task_name = options['task'][0]
-        slack_channel = settings.SLACK_PROCESS_CHANNEL
-        slack_username = settings.SLACK_PROCESS_USERNAME
-        slack_emoji = settings.SLACK_PROCESS_EMOJI
+
+        if hasattr(settings, 'SLACK_WEBHOOK'):
+            slack_channel = settings.SLACK_PROCESS_CHANNEL
+            slack_username = settings.SLACK_PROCESS_USERNAME
+            slack_emoji = settings.SLACK_PROCESS_EMOJI
+            service_name = settings.SERVICE_NAME
+        if hasattr(settings, 'ENV'):
+            service_name += " " + settings.ENV
 
         if task_name in settings.PROCESS_MAP:
             param_string = None
@@ -36,51 +41,54 @@ class Command(BaseCommand):
                 try:
                     params = json.loads(param_string)
                 except Exception as e:
-                    if not settings.DEBUG and settings.SLACK_WEBHOOK:
+                    if all([ not settings.DEBUG,
+                           hasattr(settings,'SLACK_WEBHOOK') ]):
                         param_string = str(param_string)
-                        title = settings.SERVICE_NAME + ": Process Creation Failed"
+                        title = service_name + ": Process Creation Failed"
                         message = (
                             "Arguments for task {} don't appear to be valid"
                             " JSON.\nArguments were {}")
                         message = message.format(task_name, param_string)
                         slack_notification(message=message,
-                                           channel=settings.SLACK_PROCESS_CHANNEL,
-                                           username=settings.SLACK_PROCESS_USERNAME,
-                                           emoji=settings.SLACK_PROCESS_EMOJI,
+                                           channel=slack_channel,
+                                           username=slack_username,
+                                           emoji=slack_emoji,
                                            title=title)
                     else:
-                        print(SPACER_LINE)
-                        print("Arguments for task {} do not appear to be valid"
-                              " JSON.".format(
-                                  task_name))
-                        print(SPACER_LINE)
+                        message = ("Arguments for task {} do not appear to be "
+                                   "valid JSON.".format(task_name))
+                        message = (SPACER_LINE + "\n" + message + "\n"
+                                   + SPACER_LINE)
+                        self.stderr.write(message)
                     return
                 if not type(params) == dict:
-                    if not settings.DEBUG and settings.SLACK_WEBHOOK:
-                        title = settings.SERVICE_NAME + ": Process Creation Failed"
+                    if all([ not settings.DEBUG,
+                             hasattr(settings, 'SLACK_WEBHOOK') ]):
+                        title = service_name + ": Process Creation Failed"
                         message = ("Arguments for task {} are not a valid dict"
                                    ".\nArguments were {}")
                         message = message.format(task_name, param_string)
-                        slack_notification(message=message,
-                                           channel=settings.SLACK_PROCESS_CHANNEL,
-                                           username=settings.SLACK_PROCESS_USERNAME,
-                                           emoji=settings.SLACK_PROCESS_EMOJI,
-                                           title=title)
+                        slack_notification(
+                            message=message,
+                            channel=settings.SLACK_PROCESS_CHANNEL,
+                            username=settings.SLACK_PROCESS_USERNAME,
+                            emoji=settings.SLACK_PROCESS_EMOJI,
+                            title=title)
                     else:
-                        print(SPACER_LINE)
-                        print("Arguments for task {} do not appear to be a "
-                              "JSON dict.".format(task_name))
-                        print(SPACER_LINE)
+                        message = ("Arguments for task {} do not appear to be "
+                              "a JSON dict.".format(task_name))
+                        message = (SPACER_LINE + "\n" + message + "\n" +
+                                   SPACER_LINE)
+                        self.stderr.write(message)
                     return
             process = Process.objects.create(name=task_name, context={})
             message = "Running task '{}' with the following task ids:\n{}"
             message = message.format(task_name, process.task_ids)
             if settings.DEBUG:
-                print(SPACER_LINE)
-                print(message)
-                print(SPACER_LINE)
-            elif settings.SLACK_WEBHOOK:
-                title = settings.SERVICE_NAME + ": Process Creation Succeeded"
+                message = SPACER_LINE + "\n" + message + "\n" + SPACER_LINE
+                self.stdout.write(self.style.SUCCESS(message))
+            elif hasattr(settings,'SLACK_WEBHOOK'):
+                title = service_name + ": Process Creation Succeeded"
                 slack_notification(message=message,
                                    channel=settings.SLACK_PROCESS_CHANNEL,
                                    username=settings.SLACK_PROCESS_USERNAME,
@@ -99,6 +107,6 @@ class Command(BaseCommand):
                                    emoji=settings.SLACK_PROCESS_EMOJI,
                                    title=title)
             else:
-                print(SPACER_LINE)
-                print("Couldn't find task '{}'".format(task_name))
-                print(SPACER_LINE)
+                message = "Couldn't find task '{}'".format(task_name)
+                message = SPACER_LINE + "\n" + message + "\n" + SPACER_LINE
+                self.stderr.write(message)
