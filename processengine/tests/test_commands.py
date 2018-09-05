@@ -136,6 +136,7 @@ class RunTaskTestNotificationCase(TestCase):
                        SERVICE_NAME="Someservice",
                        DEBUG=True)
     def test_call_valid_task_debug_on_no_notification(self):
+        out = StringIO()
         responses.add(responses.POST, url=settings.SLACK_WEBHOOK, status=200)
         # Check that we start with zero Processes
         process_count = Process.objects.count()
@@ -143,9 +144,10 @@ class RunTaskTestNotificationCase(TestCase):
         # Run the command
         args = ['ping']
         opts = {}
-        call_command('run_task', *args, **opts)
+        call_command('run_task', stdout=out, *args, **opts)
         self.worker.work(burst=True)
         self.assertEqual(len(responses.calls), 0)
+        self.assertIn("Running task", out.getvalue())
 
     @responses.activate
     @override_settings(SLACK_WEBHOOK="http://example.com",
