@@ -36,7 +36,7 @@ so::
         ...
     }
 
-3. (Optional) Add settings for Slack Notifications. Note that if you add a SLACK_WEBHOOK setting we assume you will also have the other settings present.::
+3. (Optional) Add settings for Slack Notifications. Note that it is an error to add a SLACK_WEBHOOK setting without also having the other settings below present.::
   SLACK_WEBHOOK = "https://hooks.slack.com/services/T051CQH14/VWVRAAFA5/lPz2y84gM0JUoVllBow0Glcx"
   SLACK_PROCESS_CHANNEL = "#Processes"
   SLACK_PROCESS_USERNAME = "Someuser"

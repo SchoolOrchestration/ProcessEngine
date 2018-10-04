@@ -30,8 +30,8 @@ class Command(BaseCommand):
             slack_username = settings.SLACK_PROCESS_USERNAME
             slack_emoji = settings.SLACK_PROCESS_EMOJI
             service_name = settings.SERVICE_NAME
-        if hasattr(settings, 'ENV'):
-            service_name += " " + settings.ENV
+            if hasattr(settings, 'ENV'):
+                service_name += " " + settings.ENV
 
         if task_name in settings.PROCESS_MAP:
             param_string = None
