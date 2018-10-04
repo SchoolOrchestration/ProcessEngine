@@ -33,6 +33,7 @@ class Command(BaseCommand):
             if hasattr(settings, 'ENV'):
                 service_name += " " + settings.ENV
 
+        params = {}
         if task_name in settings.PROCESS_MAP:
             param_string = None
             with suppress(IndexError):
@@ -81,7 +82,7 @@ class Command(BaseCommand):
                                    SPACER_LINE)
                         self.stderr.write(message)
                     return
-            process = Process.objects.create(name=task_name, context={})
+            process = Process.objects.create(name=task_name, context=params)
             message = "Running task '{}' with the following task ids:\n{}"
             message = message.format(task_name, process.task_ids)
             if settings.DEBUG:
