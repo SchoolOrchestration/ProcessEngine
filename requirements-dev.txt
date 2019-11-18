@@ -1,0 +1,14 @@
+flake8
+flake8-bugbear
+flake8-debugger
+flake8-deprecated
+flake8-docstrings
+flake8_dodgy
+pylint
+epc
+importmagic
+yapf
+pydocstyle
+isort
+autoflake
+dodgy

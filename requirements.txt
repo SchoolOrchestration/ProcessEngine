@@ -10,11 +10,10 @@ newrelic
 django-storages==1.6.3
 boto==2.48.0
 ipython
-celery==4.1.0
-kombu
 redis
-django-celery-results
-
+rq
+django-rq
+django-redis
 
 # Testing Utilities
 faker
